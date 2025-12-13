@@ -10,7 +10,7 @@ function Home() {
     const { category } = useParams();
 
     // Simple cart add logic using localStorage (must be before any return)
-    const [cart, setCart] = useState(() => {
+    const [, setCart] = useState(() => {
         try {
             return JSON.parse(localStorage.getItem('cart') || '[]');
         } catch {

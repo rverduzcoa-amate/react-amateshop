@@ -15,7 +15,7 @@ function findProductById(productId) {
 function Product() {
     const { productId } = useParams();
     // All hooks must be called unconditionally
-    const [cart, setCart] = useState(() => {
+    const [, setCart] = useState(() => {
         try {
             return JSON.parse(localStorage.getItem('cart') || '[]');
         } catch {
