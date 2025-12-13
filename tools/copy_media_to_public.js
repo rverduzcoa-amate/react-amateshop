@@ -4,6 +4,8 @@ const path = require('path');
 const srcRoot = path.resolve(__dirname, '..', 'src', 'assets');
 const publicRoot = path.resolve(__dirname, '..', 'public', 'media');
 
+const verbose = process.argv.includes('--verbose') || process.env.COPY_MEDIA_VERBOSE === '1';
+
 function copyRecursive(src, dest) {
   if (!fs.existsSync(src)) return;
   if (!fs.existsSync(dest)) fs.mkdirSync(dest, { recursive: true });
@@ -15,7 +17,7 @@ function copyRecursive(src, dest) {
       copyRecursive(srcPath, destPath);
     } else {
       fs.copyFileSync(srcPath, destPath);
-      console.log('copied', srcPath, '->', destPath);
+      if (verbose) console.log('copied', srcPath, '->', destPath);
     }
   });
 }
@@ -25,4 +27,4 @@ copyRecursive(path.join(srcRoot, 'img'), path.join(publicRoot, 'img'));
 // Copy videos to public/media/videos
 copyRecursive(path.join(srcRoot, 'videos'), path.join(publicRoot, 'videos'));
 
-console.log('done copying media to public/media/*');
+if (verbose) console.log('done copying media to public/media/*');
