@@ -32,17 +32,16 @@ export default function NewArrivals({ limit = 8 }) {
       if (el && el.scrollIntoView) {
         try { el.scrollIntoView({ inline: 'center', behavior: 'smooth', block: 'nearest' }); } catch (e) {}
       }
-      // pause all, play only the requested video
-      videoRefs.current.forEach((v, i) => {
+      // Attempt to play all videos (muted). Do not pause others.
+      videoRefs.current.forEach((v) => {
         try {
           if (!v) return;
-          if (i === idx) {
-            v.muted = true;
-            try { v.load(); } catch (e) {}
-            v.play().catch(() => {});
+          v.muted = true;
+          const tryPlay = () => v.play().catch(() => {});
+          if (v.readyState >= 2) {
+            tryPlay();
           } else {
-            v.pause();
-            try { v.currentTime = 0; } catch (e) {}
+            v.addEventListener('canplay', tryPlay, { once: true });
           }
         } catch (e) {}
       });
@@ -58,6 +57,25 @@ export default function NewArrivals({ limit = 8 }) {
     }, 4200);
 
     return () => clearInterval(id);
+  }, [items]);
+
+  // Pause offscreen new-arrivals videos using IntersectionObserver
+  useEffect(() => {
+    if (typeof IntersectionObserver === 'undefined') return;
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const v = entry.target;
+        if (!v) return;
+        if (entry.intersectionRatio >= 0.25) {
+          try { v.muted = true; v.play().catch(() => {}); } catch (e) {}
+        } else {
+          try { v.pause(); } catch (e) {}
+        }
+      });
+    }, { threshold: [0, 0.25, 0.5] });
+
+    videoRefs.current.forEach(v => { if (v) try { obs.observe(v); } catch (e) {} });
+    return () => { try { obs.disconnect(); } catch (e) {} };
   }, [items]);
 
   // `items` is computed above in the effect section
