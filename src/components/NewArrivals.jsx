@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import resolvePublicPath from '../utils/resolvePublicPath';
 import { useNavigate } from 'react-router-dom';
 import { newArrivals } from '../data/newArrivals';
@@ -12,11 +12,13 @@ export default function NewArrivals({ limit = 8 }) {
   const navigate = useNavigate();
 
   // Prefer `products` flagged with `new: true`; fallback to data/newArrivals.js
-  const productItems = Object.keys(products).reduce((acc, key) => {
-    (products[key] || []).forEach(p => { if (p && p.new) acc.push({ ...p, category: key }); });
-    return acc;
-  }, []);
-  const items = (productItems.length > 0 ? productItems : newArrivals).slice(0, limit);
+  const items = useMemo(() => {
+    const productItems = Object.keys(products).reduce((acc, key) => {
+      (products[key] || []).forEach(p => { if (p && p.new) acc.push({ ...p, category: key }); });
+      return acc;
+    }, []);
+    return (productItems.length > 0 ? productItems : newArrivals).slice(0, limit);
+  }, [limit]);
 
   useEffect(() => {
     if (!items || items.length === 0) return;
@@ -56,7 +58,7 @@ export default function NewArrivals({ limit = 8 }) {
     }, 4200);
 
     return () => clearInterval(id);
-  }, [limit, /* items length changes will reset effect */ items.length]);
+  }, [items]);
 
   // `items` is computed above in the effect section
 
