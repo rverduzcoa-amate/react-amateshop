@@ -2,6 +2,7 @@
 
 
 import React, { useState, useRef, useEffect } from 'react';
+import resolvePublicPath from '../utils/resolvePublicPath';
 import { useParams, Link } from 'react-router-dom';
 import { products } from '../data/products';
 import { videosHome } from '../data/videos';
@@ -41,6 +42,7 @@ function Home() {
                 if (!v) return;
                 if (idx === currentVideo) {
                     v.muted = true;
+                    try { v.load(); } catch (e) {}
                     v.play().catch(() => {});
                 } else {
                     v.pause();
@@ -83,11 +85,12 @@ function Home() {
                         videosHome.map((v, i) => (
                             <div key={v.id} className={`video-slide-item ${i === currentVideo ? 'active' : ''}`} style={{width: '100%', height: '100%', position: 'absolute', top: 0, left: 0}}>
                                 <video
-                                    src={process.env.PUBLIC_URL + v.src}
+                                    src={resolvePublicPath(v.src)}
                                     muted
                                     playsInline
                                     loop
-                                    preload="metadata"
+                                    preload="auto"
+                                    poster={v.poster ? resolvePublicPath(v.poster) : undefined}
                                     ref={el => videoRefs.current[i] = el}
                                     style={{width: '100%', height: '100%', objectFit: 'cover', display: 'block'}}
                                 />
@@ -109,7 +112,7 @@ function Home() {
                     <div key={prod.id} className="card show">
                         <Link to={`/products/${prod.id}`} className="product-link">
                                 <img
-                                src={process.env.PUBLIC_URL + (Array.isArray(prod.img) ? prod.img[0] : prod.img)}
+                                src={resolvePublicPath(Array.isArray(prod.img) ? prod.img[0] : prod.img)}
                                 alt={prod.nombre}
                                 className="product-img"
                                 loading="lazy"

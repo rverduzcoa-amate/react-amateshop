@@ -1,6 +1,7 @@
 
 
 import React, { useState } from 'react';
+import resolvePublicPath from '../utils/resolvePublicPath';
 import { useParams } from 'react-router-dom';
 import { products } from '../data/products';
 
@@ -49,10 +50,11 @@ function Product() {
     return (
         <section id="view-product" className="view">
             <h1>{product.nombre}</h1>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 16 }}>
+            <div className="product-main">
                 <img
-                    src={process.env.PUBLIC_URL + mainImg}
+                    src={resolvePublicPath(mainImg)}
                     alt={product.nombre}
+                    className="product-img"
                     style={{ width: 260, borderRadius: 10, objectFit: 'cover', background: '#f0f0f0', marginBottom: 8, boxShadow: '0 2px 12px rgba(199,161,106,0.10)' }}
                     loading="lazy"
                     onError={e => { e.target.style.display = 'none'; }}
@@ -62,7 +64,7 @@ function Product() {
                         {images.map((src, i) => (
                             <img
                                 key={i}
-                                src={process.env.PUBLIC_URL + src}
+                                src={resolvePublicPath(src)}
                                 alt={product.nombre + ' miniatura ' + (i+1)}
                                 style={{ width: 54, height: 54, borderRadius: 6, objectFit: 'cover', background: '#f0f0f0', border: mainImg === src ? '2px solid #c7a16a' : '2px solid #eee', cursor: 'pointer', transition: 'border 0.2s' }}
                                 onClick={() => setMainImg(src)}
@@ -74,7 +76,7 @@ function Product() {
                 )}
             </div>
             <div className="precio" style={{ fontSize: 24, margin: '16px 0' }}>{product.precio}</div>
-            <button onClick={() => addToCart(product.id)} style={{ background: '#c7a16a', color: '#fff', border: 'none', borderRadius: 6, padding: '10px 24px', fontSize: 18, cursor: 'pointer', marginTop: 16 }}>
+            <button onClick={() => addToCart(product.id)} className="add-to-cart-btn" style={{ background: '#c7a16a', color: '#fff', border: 'none', padding: '10px 24px', fontSize: 18, cursor: 'pointer', marginTop: 16 }}>
                 Añadir al carrito
             </button>
         </section>

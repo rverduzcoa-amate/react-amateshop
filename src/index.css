@@ -64,6 +64,32 @@
   display: block;
   transition: box-shadow 0.2s, filter 0.2s;
 }
+/* Ensure images are centered within cards and don't stretch layout */
+.product-link .product-img {
+  margin: 0 auto 10px auto;
+  display: block;
+}
+
+/* Card button alignment */
+.add-to-cart-btn {
+  display: inline-block;
+  margin: 10px auto 0 auto;
+  padding: 10px 18px;
+  border-radius: 10px;
+}
+
+/* Product card content layout */
+.card.show {
+  align-items: center;
+  text-align: center;
+}
+
+/* Product page main image container */
+.product-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .product-img:empty, .product-img[src=''], .product-img:not([src]) {
   background: #eee url('./assets/img/icons/new.svg') center center/60% no-repeat;
   filter: grayscale(0.5);
@@ -90,32 +116,14 @@
   border-bottom: 1px solid #eee;
   transform: translateY(0);
   opacity: 1;
-  transition: transform 260ms cubic-bezier(.2,.9,.2,1), opacity 260ms ease;
+  transition: transform 260ms cubic-bezier(.2,.9,.2,1), opacity 220ms ease;
   will-change: transform, opacity;
   z-index: 9999;
 }
 
 .persistent-header.hidden {
-  transform: translateY(-100%);
+  transform: translateY(-110%);
   opacity: 0;
-  pointer-events: none;
-}
-
-/* Ensure the carousel content sits under the fixed header */
-.vertical-carousel-container {
-  position: relative;
-  z-index: 0;
-  overflow: hidden;
-}
-.video-slide-item {
-  z-index: 0;
-}
-.vertical-carousel-container video {
-  z-index: 0;
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 .persistent-header .cart-badge {

@@ -1,5 +1,6 @@
 
 import React from 'react';
+import resolvePublicPath from '../utils/resolvePublicPath';
 import { useNavigate, Link, useParams } from 'react-router-dom';
 import { products } from '../data/products';
 
@@ -54,7 +55,7 @@ function Categories() {
                     {catProducts.map(prod => (
                         <Link to={`/products/${prod.id}`} className="card show product-link" key={prod.id}>
                             <img
-                                src={process.env.PUBLIC_URL + (Array.isArray(prod.img) ? prod.img[0] : prod.img)}
+                                src={resolvePublicPath(Array.isArray(prod.img) ? prod.img[0] : prod.img)}
                                 alt={prod.nombre}
                                 className="product-img"
                                 loading="lazy"
