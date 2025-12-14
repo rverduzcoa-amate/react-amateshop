@@ -3,32 +3,15 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import resolvePublicPath from '../utils/resolvePublicPath';
-import { useParams, Link } from 'react-router-dom';
-import { products } from '../data/products';
+import { useParams, useNavigate } from 'react-router-dom';
 import { videosHome } from '../data/videos';
+import { categoryVideoBanners } from '../data/category_videos';
+import NewArrivals from './NewArrivals';
 
 function Home() {
     const { category } = useParams();
 
-    // Simple cart add logic using localStorage (must be before any return)
-    const [, setCart] = useState(() => {
-        try {
-            return JSON.parse(localStorage.getItem('cart') || '[]');
-        } catch {
-            return [];
-        }
-    });
-
-    const addToCart = (id) => {
-        setCart(prev => {
-            const exists = prev.find(item => item.id === id);
-            const updated = exists
-                ? prev.map(item => item.id === id ? { ...item, qty: (item.qty || 1) + 1 } : item)
-                : [...prev, { id, qty: 1 }];
-            localStorage.setItem('cart', JSON.stringify(updated));
-            return updated;
-        });
-    };
+    // (cart logic removed from Home — handled globally in Header/Cart)
 
     // Video carousel refs & autoplay (hooks must be called unconditionally)
     const videoRefs = useRef([]);
@@ -46,7 +29,7 @@ function Home() {
                     v.play().catch(() => {});
                 } else {
                     v.pause();
-                    v.currentTime = 0;
+                    try { v.currentTime = 0; } catch (e) {}
                 }
             } catch (e) {}
         });
@@ -59,6 +42,46 @@ function Home() {
         }, 5000);
         return () => clearInterval(id);
     }, []);
+    
+    // Category carousel hooks (must be unconditional)
+    const catContainerRef = useRef(null);
+    const catItemRefs = useRef([]);
+    const catVideoRefs = useRef([]);
+    const currentCatIndexRef = useRef(0);
+    const navigate = useNavigate();
+
+    // autoplay: cycle category videos and scroll into view
+    useEffect(() => {
+        if (!categoryVideoBanners || categoryVideoBanners.length === 0) return;
+        const playIndex = (idx) => {
+            const el = catItemRefs.current[idx];
+            if (el && el.scrollIntoView) {
+                try { el.scrollIntoView({ inline: 'center', behavior: 'smooth', block: 'nearest' }); } catch (e) {}
+            }
+            // pause others
+            catVideoRefs.current.forEach((v, i) => {
+                try {
+                    if (!v) return;
+                    if (i === idx) {
+                        v.muted = true;
+                        try { v.load(); } catch (e) {}
+                        v.play().catch(() => {});
+                    } else {
+                        v.pause();
+                        try { v.currentTime = 0; } catch (e) {}
+                    }
+                } catch (e) {}
+            });
+        };
+
+        playIndex(0);
+        const id = setInterval(() => {
+            const next = (currentCatIndexRef.current + 1) % categoryVideoBanners.length;
+            currentCatIndexRef.current = next;
+            playIndex(next);
+        }, 4000);
+        return () => clearInterval(id);
+    }, []); // run once on mount
 
     if (category) {
         return (
@@ -68,22 +91,14 @@ function Home() {
             </section>
         );
     }
-
-    // Selecciona algunos productos destacados de varias categorías
-    const featured = [
-        ...products.pulseras.slice(0, 2),
-        ...products.cadenas.slice(0, 2),
-        ...products.anillos.slice(0, 2),
-        ...products.aretes.slice(0, 2)
-    ];
     return (
         <section id="view-home" className="view active-view">
-            {/* Carrusel de reels (videos) */}
-            <div style={{height: 320, marginBottom: 16}} className="vertical-carousel-container">
+            {/* carousel reels (videos) */}
+            <div style={{height: 500, marginBottom: 15}} className="vertical-carousel-container">
                 <div id="videoSlides" style={{position: 'relative', width: '100%', height: '100%'}}>
                     {videosHome && videosHome.length > 0 ? (
                         videosHome.map((v, i) => (
-                            <div key={v.id} className={`video-slide-item ${i === currentVideo ? 'active' : ''}`} style={{width: '100%', height: '100%', position: 'absolute', top: 0, left: 0}}>
+                            <div key={v.id} className={`video-slide-item ${i === currentVideo ? 'active' : ''}`} style={{width: '100%', height: '100%', position: 'absolute', top: 13, left: 0}}>
                                 <video
                                     src={resolvePublicPath(v.src)}
                                     muted
@@ -101,39 +116,49 @@ function Home() {
                     )}
                 </div>
             </div>
-
-            <section className="section-title-wrapper">
-                <h2>CATÁLOGO INTERACTIVO</h2>
-            </section>
-
-            {/* Grid de productos destacados */}
-            <div className="products-container" id="products">
-                {featured.map((prod) => (
-                    <div key={prod.id} className="card show">
-                        <Link to={`/products/${prod.id}`} className="product-link">
-                                <img
-                                src={resolvePublicPath(Array.isArray(prod.img) ? prod.img[0] : prod.img)}
-                                alt={prod.nombre}
-                                className="product-img"
-                                loading="lazy"
-                                onError={e => { e.target.style.display = 'none'; }}
-                            />
-                            <h3>{prod.nombre}</h3>
-                            <div className="precio">{prod.precio}</div>
-                        </Link>
-                        <button className="add-to-cart-btn" onClick={() => addToCart(prod.id)}>
-                            Añadir al carrito
-                        </button>
-                    </div>
-                ))}
+                    
+            {/* category video banners - autoplay small carousel */}
+            <div style={{height: 100, marginBottom: 15, marginTop: '1rem'}} className="categories-carousel-container">
+                <div ref={catContainerRef} style={{display: 'flex', gap: 12, alignItems: 'center', justifyContent: 'center', overflowX: 'auto', padding: '45px 1px'}}>
+                    {categoryVideoBanners && categoryVideoBanners.length > 0 ? (
+                        categoryVideoBanners.map((item, idx) => (
+                            <div
+                                key={item.id}
+                                ref={el => catItemRefs.current[idx] = el}
+                                style={{display: 'block', width: 2220, height: 100, borderRadius: 8, overflow: 'hidden', position: 'relative', background: '#000', boxShadow: '0 6px 14px rgba(0,0,0,0.12)'}}
+                            >
+                                <button onClick={() => navigate(`/categories/${item.category}`)} style={{all: 'unset', display: 'block', width: '100%', height: '100%', cursor: 'pointer'}}>
+                                    <video
+                                        ref={el => catVideoRefs.current[idx] = el}
+                                        src={resolvePublicPath(item.src)}
+                                        muted
+                                        playsInline
+                                        loop
+                                        preload="auto"
+                                        poster={item.poster ? resolvePublicPath(item.poster) : undefined}
+                                        style={{width: '100%', height: '100%', objectFit: 'cover', display: 'block'}}
+                                    />
+                                    <div style={{position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#fff', textAlign: 'center', pointerEvents: 'none'}}>
+                                        <div style={{fontWeight: 700, fontSize: 13, textShadow: '0 1px 3px rgba(0,0,0,0.6)'}}>{item.titulo}</div>
+                                        <div style={{marginTop:6, fontSize:12, background:'rgba(0,0,0,0.35)', padding:'6px 10px', borderRadius:20, display:'inline-flex', alignItems:'center', gap:8}}>👆 Touch to view</div>
+                                    </div>
+                                </button>
+                            </div>
+                        ))
+                    ) : (
+                        <div style={{height:'100px', background:'#eee', display:'flex', alignItems:'center', justifyContent:'center', width:'100%'}}>Próximamente: carrusel de categorías</div>
+                    )}
+                </div>
             </div>
 
-            {/* Placeholder para carrusel de categorías */}
-            <div style={{height: '100px', background: '#ddd', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '1rem'}}>
-                Próximamente: carrusel de categorías
-            </div>
+            {/* new arrivals carousel videos */}
+            <NewArrivals />
         </section>
     );
 }
+
+// Autoplay category carousel behavior: set up interval to cycle and play
+// videos. Keep this logic outside the component render to avoid re-definitions.
+
 
 export default Home;

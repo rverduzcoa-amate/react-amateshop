@@ -19,7 +19,7 @@ export const products = {
         { id: "pulsera0018", nombre: "Pulsera Inox Plata", precio: "$159", img: ["/media/img/pulseras/pulseraPlateadaConchas.jpg","/media/img/pulseras/pulseraPlateadaConchas2.jpg"] },
         { id: "pulsera0019", nombre: "Pulsera Inox Plata", precio: "$159", img: "/media/img/pulseras/pulseraPlateadaEsla.jpg" },
         { id: "pulsera0020", nombre: "Pulsera Inox Plata", precio: "$159", img: "/media/img/pulseras/pulseraPlateadaLibra.jpg" },
-        { id: "pulsera0021", nombre: "Pulsera Inox Plata", precio: "$159", img: "/media/img/pulseras/pulserasDoaradas.jpg" }
+        { id: "pulsera0021", nombre: "Pulsera Inox Plata", precio: "$159", img: "/media/img/pulseras/pulserasDoaradas.jpg", new: true }
     ],
     cadenas: [
         { id: "cadena001", nombre: "Cadena Acero 55cm", precio: "$249", img: "/media/img/cadenas/cadenaAceroInox.jpg" },
@@ -44,13 +44,13 @@ export const products = {
         { id: "cadena020", nombre: "Cadena Acero 55cm", precio: "$249", img: "/media/img/cadenas/cadenaAceroInoxLetraLisa.jpg" },
         { id: "cadena021", nombre: "Cadena Acero 55cm", precio: "$249", img: "/media/img/cadenas/cadenaAceroInoxLetraRellena.jpg" },
         { id: "cadena022", nombre: "Cadena Acero 55cm", precio: "$249", img: ["/media/img/cadenas/cadenaAceroInoxPlateadaDijeChonky.jpg","/media/img/cadenas/cadenaAceroInoxPlateadaDijeChonky2.jpg"] },
-        { id: "cadena_405999526_10159328462481384_4355777764306565261_n", nombre: "405999526 10159328462481384 4355777764306565261 N", precio: "$299", img: ["/media/img/cadenas/405999526_10159328462481384_4355777764306565261_n(1).jpg","/media/img/cadenas/405999526_10159328462481384_4355777764306565261_n.jpg"] }
+        { id: "cadena_405999526_10159328462481384_4355777764306565261_n", nombre: "405999526 10159328462481384 4355777764306565261 N", precio: "$299", img: ["/media/img/cadenas/405999526_10159328462481384_4355777764306565261_n(1).jpg","/media/img/cadenas/405999526_10159328462481384_4355777764306565261_n.jpg"], new: true }
     ],
     layers: [
         { id: "layers001", nombre: "Layer Gold", precio: "$199", img: "/media/img/layers/aceroInoxLayerBolitas.jpg" },
         { id: "layers002", nombre: "Layer Gold", precio: "$199", img: "/media/img/layers/aceroInoxLayerCorazonV.jpg" },
         { id: "layers003", nombre: "Layer Gold", precio: "$199", img: "/media/img/layers/aceroInoxLayersLisos.jpg" },
-        { id: "layers004", nombre: "Layer Gold", precio: "$199", img: "/media/img/layers/aceroInoxLayersMar.jpg" },
+        { id: "layers004", nombre: "Layer Gold", precio: "$199", img: "/media/img/layers/aceroInoxLayersMar.jpg", new: true },
         ],
     aretes: [
         { id: "arete_angelinas", nombre: "Angelinas", precio: "$299", img: "/media/img/aretes/Angelinas.jpg" },
@@ -98,7 +98,7 @@ export const products = {
         { id: "arete_img_9160", nombre: "IMG 9160", precio: "$299", img: ["/media/img/aretes/IMG_9160.jpg", "/media/img/aretes/IMG_9160(1).jpg"] },
         { id: "arete_img_mas", nombre: "IMG Mas", precio: "$299", img: "/media/img/aretes/IMG_mas.jpg" },
         { id: "arete_img_more", nombre: "IMG More", precio: "$299", img: "/media/img/aretes/IMG_more.jpg" },
-        { id: "arete_img_otra", nombre: "IMG Otra", precio: "$299", img: "/media/img/aretes/IMG_otra.jpg" }
+        { id: "arete_img_otra", nombre: "IMG Otra", precio: "$299", img: "/media/img/aretes/IMG_otra.jpg", new: true }
     ],
     anillos: [
         { id: "anillo001", nombre: "3 Rojos", precio: "$199", img: "/media/img/anillos/anillo3rojos.jpg" },
@@ -117,14 +117,14 @@ export const products = {
         { id: "anillo014", nombre: "Union Dorada", precio: "$199", img: "/media/img/anillos/anilloUnionDorada.jpg" },
         { id: "anillo015", nombre: "El Dorado", precio: "$199", img: "/media/img/anillos/elDorado.jpg" },
         { id: "anillo016", nombre: "Gypto Gold", precio: "$199", img: "/media/img/anillos/gyptoDorado.jpg" },
-        { id: "anillo017", nombre: "Golden Piece", precio: "$199", img: "/media/img/anillos/impalaDorado.jpg" },
+        { id: "anillo017", nombre: "Golden Piece", precio: "$199", img: "/media/img/anillos/impalaDorado.jpg", new: true },
         
     ],
     piercings: [
-        { id: "piercing001", nombre: "Piercing Acero", precio: "$199", img: "" }
+        { id: "piercing001", nombre: "Piercing Acero", precio: "$199", img: "", new: true }
     ],
     relojes: [
-        { id: "reloj001", nombre: "Reloj Pleateado", precio: "$199", img: ["/media/img/relojes/relojPlateado.jpg", "/media/img/relojes/relojPlateado2.jpg", "/media/img/relojes/relojPlateado3.jpg"] }
+        { id: "reloj001", nombre: "Reloj Pleateado", precio: "$199", img: ["/media/img/relojes/relojPlateado.jpg", "/media/img/relojes/relojPlateado2.jpg", "/media/img/relojes/relojPlateado3.jpg"], new: true }
     ]
 };
 //Commands to add products automatically can be found in tools/auto_insert_products_fixed.js
